@@ -208,6 +208,53 @@ h1 {
   transform: translateY(-2px);
 }
 
+/* Hypermedia Callout */
+.hypermedia-callout {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.callout-content {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+}
+
+.callout-badge {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.callout-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.callout-content p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.callout-meta {
+  font-size: 1rem !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.callout-content a {
+  color: white;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.callout-content a:hover {
+  text-decoration: none;
+}
+
 /* Features */
 .features {
   padding: 6rem 0;
