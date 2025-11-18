@@ -65,4 +65,4 @@ You have been writing DATAOS apps all along — you just didn't know it yet.
 ---
 
 Made by [@adamzwasserman](https://twitter.com/adamzwasserman)
-Powered by **DATAOS**[stateless.software]
+Powered by **[DATAOS](stateless.software)**
