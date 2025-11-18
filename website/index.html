@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stateless — The React state library with zero state</title>
+  <meta name="description" content="The React state library that contains no state. Pure DATAOS. Zero sync bugs.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">stateless</div>
+      <nav>
+        <a href="#features">features</a>
+        <a href="#install">install</a>
+        <a href="https://github.com/adamzwasserman/stateless">github</a>
+        <a href="#" class="cta">npm install stateless</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">pure DATAOS</div>
+        <h1>The React state library<br>that <span class="highlight">contains no state</span></h1>
+        <p class="subtitle">Zero state. Zero sync bugs. Just the DOM.</p>
+
+        <div class="code-block">
+          <pre><code><span class="keyword">import</span> { useDomState } <span class="keyword">from</span> <span class="string">'stateless'</span>
+
+<span class="keyword">const</span> manifest = {
+  <span class="property">filters</span>: { <span class="property">selector</span>: <span class="string">'[data-filter]'</span>, <span class="property">extract</span>: <span class="variable">el</span> => <span class="variable">el</span>.dataset.filter },
+  <span class="property">search</span>:  { <span class="property">selector</span>: <span class="string">'#search'</span>,       <span class="property">extract</span>: <span class="variable">el</span> => <span class="variable">el</span>.value },
+}
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">const</span> state = <span class="function">useDomState</span>(manifest)  <span class="comment">// ← that's it</span>
+
+  <span class="keyword">return</span> &lt;<span class="tag">YourApp</span> <span class="property">state</span>={state} /&gt;
+}</code></pre>
+        </div>
+
+        <div class="cta-group">
+          <a href="#install" class="btn-primary">get started</a>
+          <a href="https://github.com/adamzwasserman/stateless" class="btn-secondary">view on github</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <div class="container">
+        <div class="section-header">
+          <span class="badge">why stateless</span>
+          <h2>Every other React state library is lying to you</h2>
+          <p>They all create a second copy of state in JavaScript that must be kept in sync with the DOM.</p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📦</div>
+            <h3>&lt; 1 KB gzipped</h3>
+            <p>Smaller than your average image. Zero dependencies. Pure TypeScript.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Zero sync bugs</h3>
+            <p>Mathematically impossible to get out of sync. The DOM <em>is</em> the state.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Powers multicardz</h3>
+            <p>Battle-tested on 1M+ cards with sub-100ms interactions. Pure DATAOS.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Works everywhere</h3>
+            <p>Next.js, SSR, htmx, vanilla HTML. If it has a DOM, it works.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🚫</div>
+            <h3>No useState</h3>
+            <p>No Redux. No Zustand. No signals. No duplicated state. Ever.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Full TypeScript</h3>
+            <p>Complete type safety with TypeScript. IntelliSense for everything.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="truth">
+      <div class="container">
+        <div class="truth-content">
+          <h2>The truth</h2>
+          <div class="truth-text">
+            <p><strong>stateless</strong> refuses to lie.</p>
+            <p>There is no second copy.<br>There is no sync.<br>There is only <strong>the DOM</strong>.</p>
+            <p class="truth-finale">You have been writing DATAOS apps all along — you just didn't know it yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="install">
+      <div class="container">
+        <div class="install-content">
+          <span class="badge">ready to ship</span>
+          <h2>Install stateless</h2>
+          <div class="install-command">
+            <code>npm install stateless</code>
+            <button class="copy-btn" data-copy="npm install stateless">copy</button>
+          </div>
+          <p class="install-note">Works with React 16.8+, 17.x, and 18.x</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">stateless</div>
+          <p>Powered by DATAOS</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/adamzwasserman/stateless">GitHub</a>
+          <a href="https://www.npmjs.com/package/stateless">npm</a>
+          <a href="https://twitter.com/adamzwasserman">@adamzwasserman</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
