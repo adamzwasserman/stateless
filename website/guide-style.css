@@ -273,6 +273,8 @@ nav a.active {
   border-radius: 8px;
   padding: 1.5rem;
   margin: 1.5rem 0;
+  text-wrap-mode: wrap;
+  overflow-wrap: break-word;
 }
 
 .pitfall-card h3 {
@@ -283,6 +285,7 @@ nav a.active {
 
 .pitfall-card pre {
   margin: 1rem 0 0;
+  overflow-x: auto;
 }
 
 /* Guide Footer */
