@@ -19,7 +19,7 @@ function extractState(manifest: Manifest): Record<string, any> {
 }
 
 export function useDomState<T extends Manifest>(manifest: T) {
-  const [, forceUpdate] = useReducer(x => x + 1, 0)
+  const [counter, forceUpdate] = useReducer(x => x + 1, 0)
 
   useEffect(() => {
     const observer = new MutationObserver(forceUpdate)
@@ -30,7 +30,7 @@ export function useDomState<T extends Manifest>(manifest: T) {
       attributeOldValue: true
     })
     return () => observer.disconnect()
-  }, [manifest])
+  }, [])
 
-  return useMemo(() => extractState(manifest), [manifest, forceUpdate])
+  return useMemo(() => extractState(manifest), [manifest, counter])
 }
