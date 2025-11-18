@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Guide — stateless</title>
+  <meta name="description" content="How to design your frontend and backend to use stateless and DATAOS principles">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="guide-style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><a href="/">stateless</a></div>
+      <nav>
+        <a href="/">home</a>
+        <a href="/guide.html" class="active">guide</a>
+        <a href="https://github.com/adamzwasserman/stateless">github</a>
+        <a href="#" class="cta">npm install stateless</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="guide-main">
+    <div class="container">
+      <div class="guide-hero">
+        <div class="hero-badge">design guide</div>
+        <h1>How to Build with stateless</h1>
+        <p class="subtitle">Learn <a href="https://dataos.software" target="_blank" style="color: var(--accent); font-weight: 600; text-decoration: none;">DATAOS</a> principles and how to design your frontend and backend for zero-state architecture</p>
+      </div>
+
+      <div class="guide-content">
+        <aside class="guide-sidebar">
+          <nav class="guide-nav">
+            <a href="#golden-rule" class="guide-nav-link">The Golden Rule</a>
+            <a href="#analyzing-dom" class="guide-nav-link">Analyzing Your DOM</a>
+            <a href="#identifying-state" class="guide-nav-link">Identifying State</a>
+            <a href="#backend-design" class="guide-nav-link">Backend Design</a>
+            <a href="#examples" class="guide-nav-link">Examples</a>
+            <a href="#patterns" class="guide-nav-link">Common Patterns</a>
+            <a href="#pitfalls" class="guide-nav-link">Pitfalls to Avoid</a>
+          </nav>
+        </aside>
+
+        <article class="guide-article">
+          <section id="golden-rule">
+            <h2>The Golden Rule</h2>
+            <div class="rule-box">
+              <p class="rule-text">"Users expect to find things the way they left them."</p>
+            </div>
+            <p>This is the only rule you need to understand <a href="https://dataos.software" target="_blank">DATAOS</a>. Everything else follows from it.</p>
+
+            <p>When a user interacts with your application—filtering a list, typing in a search box, selecting a tab—they expect that state to persist. Not in JavaScript. Not in Redux. <strong>In the DOM itself.</strong></p>
+
+            <div class="example-block">
+              <h4>Traditional React (Wrong)</h4>
+              <pre><code><span class="keyword">const</span> [filter, setFilter] = <span class="function">useState</span>(<span class="string">''</span>)
+
+<span class="comment">// User types "hello"</span>
+<span class="comment">// State is in JavaScript</span>
+<span class="comment">// DOM shows "hello" as a reflection</span>
+<span class="comment">// Two sources of truth → sync bugs</span></code></pre>
+            </div>
+
+            <div class="example-block success">
+              <h4>stateless (Correct)</h4>
+              <pre><code><span class="comment">// User types "hello"</span>
+<span class="comment">// State is in &lt;input value="hello"&gt;</span>
+<span class="comment">// React reads it when needed</span>
+<span class="comment">// One source of truth → impossible to desync</span>
+
+<span class="keyword">const</span> state = <span class="function">useDomState</span>({
+  filter: {
+    selector: <span class="string">'#filter'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.value
+  }
+})</code></pre>
+            </div>
+          </section>
+
+          <section id="analyzing-dom">
+            <h2>Analyzing Your DOM</h2>
+            <p>Before writing any stateless code, analyze your UI. Ask: <em>"What would a user expect to persist if they refreshed the page?"</em></p>
+
+            <h3>The 3-Question Test</h3>
+            <ol class="guide-list">
+              <li>
+                <strong>Is it visible?</strong>
+                <p>If it's rendered in the DOM, it should be <em>in</em> the DOM, not duplicated in JavaScript.</p>
+              </li>
+              <li>
+                <strong>Does it affect what's shown?</strong>
+                <p>Filters, search terms, selected tabs—these determine what the user sees. Store them as data attributes or input values.</p>
+              </li>
+              <li>
+                <strong>Would the user be surprised if it changed?</strong>
+                <p>If yes, it's state. Put it in the DOM.</p>
+              </li>
+            </ol>
+
+            <div class="callout">
+              <h4>💡 Pro Tip: View Source</h4>
+              <p>Open your browser's inspector. If you can see the state there (in attributes, values, classes), you're doing DATAOS correctly.</p>
+            </div>
+          </section>
+
+          <section id="identifying-state">
+            <h2>Identifying State in the DOM</h2>
+            <p>State lives in attributes, not JavaScript variables. Here's where to look:</p>
+
+            <div class="state-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>UI Element</th>
+                    <th>Where State Lives</th>
+                    <th>Example</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Text input</td>
+                    <td><code>value</code> or <code>data-value</code></td>
+                    <td><code>&lt;input value="search term"&gt;</code></td>
+                  </tr>
+                  <tr>
+                    <td>Checkbox</td>
+                    <td><code>checked</code> or <code>data-checked</code></td>
+                    <td><code>&lt;input type="checkbox" checked&gt;</code></td>
+                  </tr>
+                  <tr>
+                    <td>Selected tab</td>
+                    <td><code>data-active</code> or <code>aria-selected</code></td>
+                    <td><code>&lt;button data-active="true"&gt;</code></td>
+                  </tr>
+                  <tr>
+                    <td>Filter tags</td>
+                    <td><code>data-filter</code> on each tag</td>
+                    <td><code>&lt;span data-filter="urgent"&gt;</code></td>
+                  </tr>
+                  <tr>
+                    <td>Visible/hidden</td>
+                    <td><code>hidden</code> attribute or <code>data-hidden</code></td>
+                    <td><code>&lt;div hidden&gt;</code></td>
+                  </tr>
+                  <tr>
+                    <td>Sort order</td>
+                    <td><code>data-sort</code> on container</td>
+                    <td><code>&lt;div data-sort="date-desc"&gt;</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Custom Data Attributes</h3>
+            <p>Use <code>data-*</code> attributes for anything that's not a standard HTML attribute:</p>
+
+            <pre><code><span class="comment">&lt;!-- Filter state --&gt;</span>
+&lt;div <span class="property">data-filter-category</span>=<span class="string">"work"</span> <span class="property">data-filter-priority</span>=<span class="string">"high"</span>&gt;
+
+<span class="comment">&lt;!-- View mode --&gt;</span>
+&lt;div <span class="property">data-view</span>=<span class="string">"grid"</span>&gt;
+
+<span class="comment">&lt;!-- Expanded/collapsed --&gt;</span>
+&lt;details <span class="property">data-expanded</span>=<span class="string">"true"</span>&gt;</code></pre>
+          </section>
+
+          <section id="backend-design">
+            <h2>Backend Design</h2>
+            <p>Your backend should receive and return state as simple data structures. No sessions. No cookies (for state). Just data.</p>
+
+            <h3>The DATAOS Backend Pattern</h3>
+
+            <div class="example-block">
+              <h4>Traditional Backend (Wrong)</h4>
+              <pre><code><span class="comment">// Backend maintains user session state</span>
+<span class="keyword">app</span>.<span class="function">get</span>(<span class="string">'/cards'</span>, (req, res) => {
+  <span class="keyword">const</span> filter = req.session.filter <span class="comment">// State in server!</span>
+  <span class="keyword">const</span> cards = db.<span class="function">query</span>(filter)
+  res.<span class="function">json</span>(cards)
+})</code></pre>
+            </div>
+
+            <div class="example-block success">
+              <h4>DATAOS Backend (Correct)</h4>
+              <pre><code><span class="comment">// Backend receives state, returns data</span>
+<span class="keyword">app</span>.<span class="function">post</span>(<span class="string">'/cards/query'</span>, (req, res) => {
+  <span class="keyword">const</span> { filter, sort, limit } = req.body <span class="comment">// State from client!</span>
+  <span class="keyword">const</span> cards = db.<span class="function">query</span>({ filter, sort, limit })
+  res.<span class="function">json</span>(cards)
+})</code></pre>
+            </div>
+
+            <h3>Key Principles</h3>
+            <ul class="guide-list">
+              <li><strong>Stateless functions:</strong> Each request contains all state needed to process it</li>
+              <li><strong>Explicit state:</strong> State is passed in request body/params, never implied</li>
+              <li><strong>Pure functions:</strong> Same input → same output, every time</li>
+              <li><strong>No server-side sessions for UI state:</strong> Session for auth, not for filters/sorting</li>
+            </ul>
+
+            <h3>Collecting State from the DOM</h3>
+            <pre><code><span class="keyword">const</span> manifest = {
+  filters: {
+    selector: <span class="string">'[data-filter]'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.dataset.filter
+  },
+  sort: {
+    selector: <span class="string">'[data-sort]'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.dataset.sort
+  },
+  search: {
+    selector: <span class="string">'#search'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.value
+  }
+}
+
+<span class="keyword">function</span> <span class="function">loadCards</span>() {
+  <span class="keyword">const</span> state = <span class="function">extractDomState</span>(manifest)
+
+  <span class="comment">// Send state to backend</span>
+  <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'/cards/query'</span>, {
+    method: <span class="string">'POST'</span>,
+    body: <span class="function">JSON.stringify</span>(state)
+  })
+
+  <span class="keyword">return</span> response.<span class="function">json</span>()
+}</code></pre>
+          </section>
+
+          <section id="examples">
+            <h2>Real-World Examples</h2>
+
+            <h3>Example 1: Filtered List</h3>
+            <div class="example-block">
+              <h4>HTML</h4>
+              <pre><code><span class="comment">&lt;!-- Filter controls --&gt;</span>
+&lt;div <span class="property">id</span>=<span class="string">"filters"</span>&gt;
+  &lt;button <span class="property">data-filter</span>=<span class="string">"all"</span> <span class="property">data-active</span>=<span class="string">"true"</span>&gt;All&lt;/button&gt;
+  &lt;button <span class="property">data-filter</span>=<span class="string">"urgent"</span>&gt;Urgent&lt;/button&gt;
+  &lt;button <span class="property">data-filter</span>=<span class="string">"completed"</span>&gt;Completed&lt;/button&gt;
+&lt;/div&gt;
+
+<span class="comment">&lt;!-- Cards --&gt;</span>
+&lt;div <span class="property">id</span>=<span class="string">"cards"</span>&gt;
+  &lt;div <span class="property">data-status</span>=<span class="string">"urgent"</span>&gt;Urgent card&lt;/div&gt;
+  &lt;div <span class="property">data-status</span>=<span class="string">"completed"</span>&gt;Done card&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+              <h4>React Component</h4>
+              <pre><code><span class="keyword">const</span> manifest = {
+  activeFilter: {
+    selector: <span class="string">'[data-active="true"]'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.dataset.filter
+  }
+}
+
+<span class="keyword">function</span> <span class="function">CardList</span>() {
+  <span class="keyword">const</span> { activeFilter } = <span class="function">useDomState</span>(manifest)
+
+  <span class="comment">// Filter logic happens server-side or in rendering</span>
+  <span class="comment">// DOM already has the state!</span>
+
+  <span class="keyword">return</span> (
+    &lt;div&gt;
+      {<span class="comment">/* Cards filtered by activeFilter */</span>}
+    &lt;/div&gt;
+  )
+}</code></pre>
+            </div>
+
+            <h3>Example 2: Search with Debouncing</h3>
+            <div class="example-block">
+              <pre><code><span class="keyword">const</span> manifest = {
+  search: {
+    selector: <span class="string">'#search-input'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.value
+  }
+}
+
+<span class="keyword">function</span> <span class="function">SearchableList</span>() {
+  <span class="keyword">const</span> { search } = <span class="function">useDomState</span>(manifest)
+  <span class="keyword">const</span> [results, setResults] = <span class="function">useState</span>([])
+
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> timer = <span class="function">setTimeout</span>(() => {
+      <span class="comment">// Send search state to backend</span>
+      <span class="function">fetch</span>(<span class="string">'/search'</span>, {
+        method: <span class="string">'POST'</span>,
+        body: <span class="function">JSON.stringify</span>({ query: search })
+      })
+        .<span class="function">then</span>(<span class="variable">r</span> => <span class="variable">r</span>.<span class="function">json</span>())
+        .<span class="function">then</span>(setResults)
+    }, 300)
+
+    <span class="keyword">return</span> () => <span class="function">clearTimeout</span>(timer)
+  }, [search])
+
+  <span class="keyword">return</span> &lt;div&gt;{<span class="comment">/* results */</span>}&lt;/div&gt;
+}</code></pre>
+            </div>
+
+            <h3>Example 3: multicardz-style Tags</h3>
+            <div class="example-block">
+              <pre><code><span class="keyword">const</span> manifest = {
+  tags: {
+    selector: <span class="string">'.tag'</span>,
+    extract: <span class="variable">el</span> => ({
+      value: <span class="variable">el</span>.dataset.tag,
+      type: <span class="variable">el</span>.dataset.type <span class="comment">// 'user' or 'system'</span>
+    })
+  }
+}
+
+<span class="keyword">function</span> <span class="function">TaggedCards</span>() {
+  <span class="keyword">const</span> { tags } = <span class="function">useDomState</span>(manifest)
+
+  <span class="comment">// tags is an array of { value, type }</span>
+  <span class="keyword">const</span> userTags = tags.<span class="function">filter</span>(<span class="variable">t</span> => <span class="variable">t</span>.type === <span class="string">'user'</span>)
+
+  <span class="keyword">return</span> &lt;CardGrid tags={userTags} /&gt;
+}</code></pre>
+            </div>
+          </section>
+
+          <section id="patterns">
+            <h2>Common Patterns</h2>
+
+            <h3>Pattern: Active/Selected State</h3>
+            <p>Use <code>data-active</code> or <code>aria-selected</code> for UI elements with selection:</p>
+            <pre><code>&lt;button <span class="property">data-tab</span>=<span class="string">"overview"</span> <span class="property">data-active</span>=<span class="string">"true"</span>&gt;Overview&lt;/button&gt;
+&lt;button <span class="property">data-tab</span>=<span class="string">"details"</span>&gt;Details&lt;/button&gt;</code></pre>
+
+            <h3>Pattern: Multi-Select</h3>
+            <p>Multiple elements can have the same attribute:</p>
+            <pre><code>&lt;span <span class="property">data-filter</span>=<span class="string">"urgent"</span>&gt;Urgent&lt;/span&gt;
+&lt;span <span class="property">data-filter</span>=<span class="string">"work"</span>&gt;Work&lt;/span&gt;
+&lt;span <span class="property">data-filter</span>=<span class="string">"personal"</span>&gt;Personal&lt;/span&gt;
+
+<span class="comment">// Extract all filters</span>
+{
+  filters: {
+    selector: <span class="string">'[data-filter]'</span>,
+    extract: <span class="variable">el</span> => <span class="variable">el</span>.dataset.filter
+  }
+}</code></pre>
+
+            <h3>Pattern: Hidden Elements</h3>
+            <p>Don't remove from DOM—hide with attributes:</p>
+            <pre><code><span class="comment">&lt;!-- Bad: removes from DOM --&gt;</span>
+{showAdvanced && &lt;AdvancedOptions /&gt;}
+
+<span class="comment">&lt;!-- Good: keeps in DOM, toggles visibility --&gt;</span>
+&lt;div <span class="property">data-hidden</span>={!showAdvanced}&gt;
+  &lt;AdvancedOptions /&gt;
+&lt;/div&gt;</code></pre>
+
+            <h3>Pattern: URL as State</h3>
+            <p>URL params are DATAOS-compliant state:</p>
+            <pre><code><span class="comment">// URL: /cards?filter=urgent&sort=date</span>
+
+<span class="keyword">const</span> params = <span class="keyword">new</span> <span class="function">URLSearchParams</span>(window.location.search)
+<span class="keyword">const</span> filter = params.<span class="function">get</span>(<span class="string">'filter'</span>)
+<span class="keyword">const</span> sort = params.<span class="function">get</span>(<span class="string">'sort'</span>)
+
+<span class="comment">// Sync to DOM</span>
+document.<span class="function">querySelector</span>(<span class="string">'#filter'</span>).dataset.filter = filter</code></pre>
+          </section>
+
+          <section id="pitfalls">
+            <h2>Pitfalls to Avoid</h2>
+
+            <div class="pitfall-card">
+              <h3>❌ Don't Duplicate State</h3>
+              <pre><code><span class="comment">// BAD: State in both DOM and useState</span>
+<span class="keyword">const</span> [value, setValue] = <span class="function">useState</span>(<span class="string">''</span>)
+&lt;input <span class="property">value</span>={value} <span class="property">onChange</span>={<span class="variable">e</span> => <span class="function">setValue</span>(<span class="variable">e</span>.target.value)} /&gt;
+
+<span class="comment">// GOOD: State only in DOM</span>
+&lt;input <span class="property">defaultValue</span>=<span class="string">""</span> /&gt;
+<span class="comment">// Read when needed:</span>
+<span class="keyword">const</span> { value } = <span class="function">useDomState</span>({ value: { selector: <span class="string">'input'</span>, extract: <span class="variable">el</span> => <span class="variable">el</span>.value } })</code></pre>
+            </div>
+
+            <div class="pitfall-card">
+              <h3>❌ Don't Hide State in Closures</h3>
+              <pre><code><span class="comment">// BAD: State trapped in JavaScript closure</span>
+<span class="keyword">let</span> currentFilter = <span class="string">'all'</span>
+button.<span class="function">addEventListener</span>(<span class="string">'click'</span>, () => {
+  currentFilter = <span class="string">'urgent'</span>
+})
+
+<span class="comment">// GOOD: State visible in DOM</span>
+button.<span class="function">addEventListener</span>(<span class="string">'click'</span>, () => {
+  button.dataset.filter = <span class="string">'urgent'</span>
+})</code></pre>
+            </div>
+
+            <div class="pitfall-card">
+              <h3>❌ Don't Store Arrays in JavaScript</h3>
+              <pre><code><span class="comment">// BAD: Array only exists in JavaScript</span>
+<span class="keyword">const</span> [tags, setTags] = <span class="function">useState</span>([<span class="string">'work'</span>, <span class="string">'urgent'</span>])
+
+<span class="comment">// GOOD: Array represented as DOM elements</span>
+&lt;div <span class="property">id</span>=<span class="string">"tags"</span>&gt;
+  &lt;span <span class="property">data-tag</span>=<span class="string">"work"</span>&gt;work&lt;/span&gt;
+  &lt;span <span class="property">data-tag</span>=<span class="string">"urgent"</span>&gt;urgent&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="pitfall-card">
+              <h3>❌ Don't Use State for Derived Values</h3>
+              <pre><code><span class="comment">// BAD: Storing filtered results in state</span>
+<span class="keyword">const</span> [filtered, setFiltered] = <span class="function">useState</span>([])
+
+<span class="comment">// GOOD: Filter on render, driven by DOM state</span>
+<span class="keyword">const</span> { filter } = <span class="function">useDomState</span>(manifest)
+<span class="keyword">const</span> filtered = cards.<span class="function">filter</span>(<span class="variable">c</span> => <span class="variable">c</span>.status === filter)</code></pre>
+            </div>
+          </section>
+
+          <div class="guide-footer">
+            <h2>Ready to build?</h2>
+            <p>You now understand DATAOS. Go build something impossible to break.</p>
+            <p style="margin-top: 1rem;"><a href="https://dataos.software" target="_blank" style="color: var(--accent); font-weight: 600;">Learn more about DATAOS →</a></p>
+            <div class="cta-group">
+              <a href="/#install" class="btn-primary">Install stateless</a>
+              <a href="https://github.com/adamzwasserman/stateless" class="btn-secondary">View on GitHub</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">stateless</div>
+          <p>Powered by DATAOS</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://dataos.software">DATAOS</a>
+          <a href="https://github.com/adamzwasserman/stateless">GitHub</a>
+          <a href="https://www.npmjs.com/package/stateless">npm</a>
+          <a href="https://twitter.com/adamzwasserman">@adamzwasserman</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="guide-script.js"></script>
+</body>
+</html>
