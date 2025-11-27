@@ -1,4 +1,4 @@
-export type Extractor<T = any> = (el: Element) => T
+export type Extractor<T = unknown> = (el: Element) => T
 
 export interface Manifest {
   [key: string]: {

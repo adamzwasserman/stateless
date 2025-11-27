@@ -8,7 +8,10 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest",
-    "prepublishOnly": "npm run build"
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": ["react", "stateless", "dom", "dataos", "zero-sync", "hypermedia"],
   "author": "Adam Wasserman <adamzwasserman>",

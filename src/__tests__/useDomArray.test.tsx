@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook, waitFor, act } from '@testing-library/react'
 import { useDomArray } from '../useDomArray'
 import { describe, it, expect, beforeEach } from 'vitest'
 
@@ -42,7 +42,7 @@ describe('useDomArray', () => {
   it('reacts to DOM changes', async () => {
     document.body.innerHTML = '<div class="items"></div>'
 
-    const { result } = renderHook(() =>
+    const { result, rerender } = renderHook(() =>
       useDomArray('.item', el => el.textContent)
     )
 
@@ -50,9 +50,16 @@ describe('useDomArray', () => {
 
     // Add items
     const container = document.querySelector('.items')!
-    container.innerHTML = '<span class="item">New</span>'
+    const span = document.createElement('span')
+    span.className = 'item'
+    span.textContent = 'New'
+
+    await act(async () => {
+      container.appendChild(span)
+    })
 
     await waitFor(() => {
+      rerender()
       expect(result.current).toEqual(['New'])
     })
   })
