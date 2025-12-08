@@ -50,7 +50,7 @@ export function useDomState<T extends Manifest>(manifest: T) {
   useEffect(() => {
     const observer = new MutationObserver(() => forceUpdate(c => c + 1))
 
-    // Observe only elements that match our selectors for better performance
+    // Observe only elements that match our manifest selectors for better performance
     const selectors: string[] = []
     for (const key in manifest) {
       selectors.push(manifest[key].selector)

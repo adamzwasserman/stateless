@@ -134,6 +134,30 @@ Extracts an array of values from multiple DOM elements.
 
 Extracts a Map from DOM elements with key-value pairs.
 
+## Handling Browser Refresh
+
+Since the DOM is rebuilt on page refresh, UI state is lost. Use the **Cache-and-Replay Pattern**:
+
+```tsx
+// Before API calls, cache state to localStorage
+async function fetchData(filters) {
+  localStorage.setItem('lastFilters', JSON.stringify(filters))
+  // ... fetch
+}
+
+// On page load, restore and replay
+function initialize() {
+  const cached = localStorage.getItem('lastFilters')
+  if (cached) {
+    const filters = JSON.parse(cached)
+    restoreDomState(filters)  // Move DOM elements to cached positions
+    fetchData(filters)        // Replay the API call
+  }
+}
+```
+
+This doesn't violate DATAOS principles—we persist state *across* sessions, not *during* them. On restore, we immediately re-derive from the corrected DOM.
+
 ## Website
 
 [stateless.software](https://stateless.software)
