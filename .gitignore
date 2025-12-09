@@ -6,6 +6,7 @@ dist/
 *.tsbuildinfo
 .claude/
 CLAUDE.md
+.beads/
 
 # Local Netlify folder
 .netlify
