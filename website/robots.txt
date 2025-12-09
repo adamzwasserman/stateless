@@ -1,0 +1,6 @@
+# https://stateless.software robots.txt
+
+User-agent: *
+Allow: /
+
+Sitemap: https://stateless.software/sitemap.xml
