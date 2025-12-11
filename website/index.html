@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>stateless — React State Library with Zero State | DATAOS</title>
+  <title>stateless-dataos — React State Library with Zero State | DATAOS</title>
   <meta name="description" content="The React state library that contains no state. Read state directly from the DOM. Zero sync bugs, under 1KB, full TypeScript. Powers multicardz with 1M+ cards.">
   <meta name="keywords" content="React, state management, DOM, DATAOS, stateless, hooks, TypeScript, zero dependencies, htmx, hypermedia">
   <meta name="author" content="Adam Wasserman">
@@ -13,14 +13,14 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://stateless.software/">
-  <meta property="og:title" content="stateless — React State Library with Zero State">
+  <meta property="og:title" content="stateless-dataos — React State Library with Zero State">
   <meta property="og:description" content="The React state library that contains no state. Read state directly from the DOM. Zero sync bugs, under 1KB, full TypeScript.">
   <meta property="og:site_name" content="stateless">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://stateless.software/">
-  <meta name="twitter:title" content="stateless — React State Library with Zero State">
+  <meta name="twitter:title" content="stateless-dataos — React State Library with Zero State">
   <meta name="twitter:description" content="The React state library that contains no state. Read state directly from the DOM. Zero sync bugs, under 1KB, full TypeScript.">
   <meta name="twitter:creator" content="@adamzwasserman">
 
@@ -58,7 +58,7 @@
         <a href="#features">features</a>
         <a href="/guide.html">guide</a>
         <a href="https://github.com/adamzwasserman/stateless">github</a>
-        <a href="#" class="cta">npm install stateless</a>
+        <a href="#" class="cta">npm install stateless-dataos</a>
       </nav>
     </div>
   </header>
@@ -71,11 +71,11 @@
         <p class="subtitle">Zero state. Zero sync bugs. Just the DOM.</p>
 
         <div class="code-block">
-          <pre><code><span class="keyword">import</span> { useDomState } <span class="keyword">from</span> <span class="string">'stateless'</span>
+          <pre><code><span class="keyword">import</span> { useDomState } <span class="keyword">from</span> <span class="string">'stateless-dataos'</span>
 
 <span class="keyword">const</span> manifest = {
-  <span class="property">filters</span>: { <span class="property">selector</span>: <span class="string">'[data-filter]'</span>, <span class="property">extract</span>: <span class="variable">el</span> => <span class="variable">el</span>.dataset.filter },
-  <span class="property">search</span>:  { <span class="property">selector</span>: <span class="string">'#search'</span>,       <span class="property">extract</span>: <span class="variable">el</span> => <span class="variable">el</span>.value },
+  <span class="property">filters</span>: { <span class="property">selector</span>: <span class="string">'[data-filter]'</span>, <span class="property">read</span>: <span class="string">'data:filter'</span> },
+  <span class="property">search</span>:  { <span class="property">selector</span>: <span class="string">'#search'</span>,       <span class="property">read</span>: <span class="string">'value'</span> },
 }
 
 <span class="keyword">function</span> <span class="function">App</span>() {
@@ -115,7 +115,7 @@
           <div class="feature-card">
             <div class="feature-icon">📦</div>
             <h3>&lt; 1 KB gzipped</h3>
-            <p>Smaller than your average image. Zero dependencies. Pure TypeScript.</p>
+            <p>Smaller than your average image. Built on <a href="https://domx.software" target="_blank">domx</a>. Pure TypeScript.</p>
           </div>
 
           <div class="feature-card">
@@ -161,7 +161,7 @@
             <p class="truth-finale">You have been writing <a href="https://dataos.software" target="_blank" style="color: #818cf8; text-decoration: underline;">DATAOS</a> apps all along — you just didn't know it yet.</p>
           </div>
           <div class="truth-links">
-            <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--gray-400);">Learn more: <a href="https://dataos.software" target="_blank" style="color: var(--gray-300);">DATAOS</a> · <a href="https://genx.software" target="_blank" style="color: var(--gray-300);">genX</a> · <a href="https://multicardz.software" target="_blank" style="color: var(--gray-300);">multicardz</a></p>
+            <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--gray-400);">Learn more: <a href="https://dataos.software" target="_blank" style="color: var(--gray-300);">DATAOS</a> · <a href="https://domx.software" target="_blank" style="color: var(--gray-300);">domx</a> · <a href="https://genx.software" target="_blank" style="color: var(--gray-300);">genX</a> · <a href="https://multicardz.software" target="_blank" style="color: var(--gray-300);">multicardz</a></p>
           </div>
         </div>
       </div>
@@ -173,8 +173,8 @@
           <span class="badge">ready to ship</span>
           <h2>Install stateless</h2>
           <div class="install-command">
-            <code>npm install stateless</code>
-            <button class="copy-btn" data-copy="npm install stateless">copy</button>
+            <code>npm install stateless-dataos</code>
+            <button class="copy-btn" data-copy="npm install stateless-dataos">copy</button>
           </div>
           <p class="install-note">Works with React 16.8+, 17.x, and 18.x</p>
         </div>
@@ -187,10 +187,11 @@
       <div class="footer-content">
         <div class="footer-brand">
           <div class="logo">stateless</div>
-          <p>Powered by DATAOS</p>
+          <p>Powered by <a href="https://dataos.software">DATAOS</a> and <a href="https://domx.software">domx</a></p>
         </div>
         <div class="footer-links">
           <a href="https://dataos.software">DATAOS</a>
+          <a href="https://domx.software">domx</a>
           <a href="https://github.com/adamzwasserman/stateless">GitHub</a>
           <a href="https://www.npmjs.com/package/stateless">npm</a>
           <a href="https://twitter.com/adamzwasserman">@adamzwasserman</a>

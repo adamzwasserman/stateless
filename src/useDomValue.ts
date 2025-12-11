@@ -1,9 +1,10 @@
 import { useDomState } from './useDomState'
+import { apply } from 'domx-dataos'
 
 /**
  * Two-way binding hook for DOM element values.
  * Reads from data-{attribute} first, then falls back to {attribute}.
- * Writes to data-{attribute} to avoid conflicts with native properties.
+ * Writes to data-{attribute} using domx apply().
  *
  * @param selector - CSS selector for the target element
  * @param attribute - Attribute name to read/write (defaults to 'value')
@@ -16,16 +17,18 @@ import { useDomState } from './useDomState'
  * ```
  */
 export function useDomValue(selector: string, attribute = 'value') {
-  const state = useDomState({
+  const manifest = {
     value: {
       selector,
-      extract: (el: Element) => el.getAttribute(`data-${attribute}`) ?? el.getAttribute(attribute) ?? ''
+      read: (el: Element) => el.getAttribute(`data-${attribute}`) ?? el.getAttribute(attribute) ?? '',
+      write: `data:${attribute}`
     }
-  })
+  }
+
+  const state = useDomState(manifest)
 
   const setValue = (value: string) => {
-    const el = document.querySelector(selector)
-    if (el) el.setAttribute(`data-${attribute}`, value)
+    apply(manifest, { value })
   }
 
   return [state.value, setValue] as const

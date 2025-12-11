@@ -1,19 +1,28 @@
 {
-  "name": "stateless",
+  "name": "stateless-dataos",
   "version": "1.0.0",
   "description": "The React state library with zero state — pure DATAOS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run build && npm run test -- --run"
   },
-  "keywords": ["react", "stateless", "dom", "dataos", "zero-sync", "hypermedia"],
+  "keywords": [
+    "react",
+    "stateless",
+    "dom",
+    "dataos",
+    "zero-sync",
+    "hypermedia"
+  ],
   "author": "Adam Wasserman <adamzwasserman>",
   "license": "MIT",
   "homepage": "https://stateless.software",
@@ -22,6 +31,7 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.3.0",
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -30,5 +40,8 @@
     "react-dom": "^18.2.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "domx-dataos": "^0.1.0"
   }
 }

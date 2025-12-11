@@ -7,7 +7,7 @@ describe('useDomArray', () => {
     document.body.innerHTML = ''
   })
 
-  it('extracts array from multiple elements', () => {
+  it('extracts array from multiple elements using data shortcut', () => {
     document.body.innerHTML = `
       <li data-id="1">Item 1</li>
       <li data-id="2">Item 2</li>
@@ -15,15 +15,28 @@ describe('useDomArray', () => {
     `
 
     const { result } = renderHook(() =>
-      useDomArray('li', el => el.getAttribute('data-id'))
+      useDomArray('li', 'data:id')
     )
 
     expect(result.current).toEqual(['1', '2', '3'])
   })
 
+  it('extracts array using custom function', () => {
+    document.body.innerHTML = `
+      <li data-id="1">Item 1</li>
+      <li data-id="2">Item 2</li>
+    `
+
+    const { result } = renderHook(() =>
+      useDomArray('li', el => el.getAttribute('data-id'))
+    )
+
+    expect(result.current).toEqual(['1', '2'])
+  })
+
   it('returns empty array for no matches', () => {
     const { result } = renderHook(() =>
-      useDomArray('.nonexistent', el => el.textContent)
+      useDomArray('.nonexistent', 'text')
     )
 
     expect(result.current).toEqual([])
@@ -33,7 +46,7 @@ describe('useDomArray', () => {
     document.body.innerHTML = '<div class="item">Only one</div>'
 
     const { result } = renderHook(() =>
-      useDomArray('.item', el => el.textContent)
+      useDomArray('.item', 'text')
     )
 
     expect(result.current).toEqual(['Only one'])
@@ -43,7 +56,7 @@ describe('useDomArray', () => {
     document.body.innerHTML = '<div class="items"></div>'
 
     const { result, rerender } = renderHook(() =>
-      useDomArray('.item', el => el.textContent)
+      useDomArray('.item', 'text')
     )
 
     expect(result.current).toEqual([])
