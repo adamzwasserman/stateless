@@ -1,0 +1,35 @@
+# stateless-dataos
+
+> The React state library that contains no state, by Adam Zachary Wasserman
+
+## What this is
+
+stateless is a React hook library that reads state directly from the DOM instead of maintaining its own state store. Instead of useState or useReducer, components call useDOM() to read current values from DOM attributes and content. This eliminates sync bugs between React state and the actual DOM, because there is only one source of truth: the DOM itself.
+
+## Why it exists
+
+React's state model creates a fundamental problem: the framework maintains a virtual representation of the DOM, and the developer must keep framework state and actual DOM state synchronized. Every state management library (Redux, Zustand, Recoil, Jotai) adds another layer of indirection on top of this. stateless removes all of these layers by reading directly from what the user actually sees.
+
+## Key features
+
+- useDOM() hook: read state from DOM elements
+- Under 1KB minified and gzipped
+- Full TypeScript support
+- Zero sync bugs by design
+- Powers Multicardz in production with 1M+ cards
+- Part of the DATAOS ecosystem (DOM As The Authority On State)
+
+## Pages
+
+- [Home](https://stateless.software/): Overview, quick start, API reference
+- [Guide](https://stateless.software/guide.html): Detailed usage guide
+
+## Related projects
+
+- [DATAOS](https://dataos.software): The architectural philosophy stateless implements
+- [domx](https://domx.software): DOM state observer for vanilla JS
+- [genX](https://genx.software): Declarative HTML attribute behaviors
+
+## Author
+
+Adam Zachary Wasserman — [adamzacharywasserman.com](https://adamzacharywasserman.com)
