@@ -1,7 +1,7 @@
 {
   "name": "stateless-dataos",
   "version": "1.0.0",
-  "description": "The React state library with zero state — pure DATAOS",
+  "description": "The React state library with zero state \u2014 pure DATAOS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "lint": "tsc --noEmit",
